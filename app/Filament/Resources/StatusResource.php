@@ -57,6 +57,11 @@ class StatusResource extends Resource
         ];
     }
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasRole('admin');
+    }
+
     public static function getPages(): array
     {
         return [
