@@ -44,7 +44,14 @@ class UserResource extends Resource
                     ])
                     ->preload()
                     ->required()
-                    ->label('Role'),
+                    ->label('Role')
+                    ->live(),
+
+                Forms\Components\Select::make('team_lead_id')
+                    ->options(User::where('role', 'manager')->pluck('name', 'id'))
+                    ->preload()
+                    ->label('Manager')
+                    ->hidden(fn(Forms\Get $get) => $get('role') !== 'agent')
             ]);
     }
 
