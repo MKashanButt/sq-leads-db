@@ -113,7 +113,7 @@ class LeadsResource extends Resource
 
         return $table
             ->modifyQueryUsing(function (Builder $query) use ($user) {
-                if ($user->hasRole('admin')) {
+                if ($user->hasRole('admin') || $user->hasRole('manager')) {
                     return $query;
                 }
 
@@ -148,11 +148,18 @@ class LeadsResource extends Resource
                     )->hidden(fn(): bool => !$user->hasRole('admin')),
                 Tables\Columns\SelectColumn::make('assigned_to_id')
                     ->label('Assigned To')
-                    ->options(User::where('role', 'agent')->pluck('name', 'id'))
+                    ->options(
+                        $isAdmin ?
+                            User::where('role', 'agent')
+                            ->pluck('name', 'id')
+                            :
+                            User::where('role', 'agent')
+                            ->where('team_lead_id', $user->id)
+                            ->pluck('name', 'id')
+                    )
                     ->extraAttributes(['class' => 'width-full'])
                     ->searchable()
-                    ->disabled(fn() => !$isAdmin)
-                    ->hidden(fn(): bool => !$user->hasRole('admin')),
+                    ->hidden(fn(): bool => !$user->hasRole('admin') && !$user->hasRole('manager')),
                 $isAdmin
                     ? Tables\Columns\SelectColumn::make('status_id')
                     ->label('Status')
