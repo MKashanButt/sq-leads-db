@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'team_lead_id'
     ];
 
     /**
@@ -56,6 +58,17 @@ class User extends Authenticatable
     public function assignedTo(): HasMany
     {
         return $this->hasMany(Lead::class);
+    }
+
+    public function teamMembers(): HasMany
+    {
+        return $this->hasMany(User::class, 'team_lead_id');
+    }
+
+    // Relationship to get the team lead (for a team member)
+    public function teamLead(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'team_lead_id');
     }
 
     public function hasRole($role): bool
