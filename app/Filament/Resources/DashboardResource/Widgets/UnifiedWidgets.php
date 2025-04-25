@@ -44,12 +44,25 @@ class UnifiedWidgets extends BaseWidget
 
         $stats = [
             Stat::make('Total Leads', $leadsCount)
-                ->description('Last Lead Posted on ' . Lead::latest()->first()->created_at->format('d M Y'))
+                ->description(
+                    Lead::when(
+                        Lead::exists(),
+                        fn($query) => 'Last Lead Posted on ' . $query->latest()->first()->created_at->format('d M Y'),
+                        fn() => 'No leads have been posted yet'
+                    )
+                )
                 ->color('gray')
                 ->chart([1, 4, 5, 2, 3, 4, 5])
                 ->descriptionIcon('heroicon-o-user-group'),
             Stat::make('Paid Leads', $paidLeadsCount)
-                ->description('Last Lead Paid on ' . Lead::latest()->first()->created_at->format('d M Y'))
+                ->description(
+                    Lead::whereHas('status', fn($q) => $q->where('name', 'paid'))
+                        ->when(
+                            fn($query) => $query->exists(),
+                            fn($query) => 'Last Lead Paid on ' . $query->latest()->first()->created_at->format('d M Y'),
+                            fn() => 'No paid leads yet'
+                        )
+                )
                 ->color('success')
                 ->descriptionIcon('heroicon-o-user-group')
                 ->chart([1, 4, 5, 2, 3, 4, 5]),
