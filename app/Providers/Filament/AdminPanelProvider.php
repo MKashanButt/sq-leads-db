@@ -2,6 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\DashboardResource\Widgets\LeadsCountWidget as WidgetsLeadsCountWidget;
+use App\Filament\Resources\DashboardResource\Widgets\UnifiedWidgets;
+use App\Filament\Resources\LeadsResource\Widgets\RecentLeads;
+use App\Filament\Widgets\CenterCountWidget;
+use App\Filament\Widgets\LeadsCountWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('/')
             ->login()
             ->colors([
-                'primary' => '#222222',
+                'primary' => Color::Blue,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -37,7 +42,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                UnifiedWidgets::class,
+                RecentLeads::class,
             ])
             ->middleware([
                 EncryptCookies::class,
