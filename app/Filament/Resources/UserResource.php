@@ -58,6 +58,13 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                if (auth()->user()->hasRole('admin')) {
+                    return $query;
+                }
+
+                return $query->whereNot('role', 'admin');
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
@@ -92,7 +99,7 @@ class UserResource extends Resource
 
     public static function canAccess(): bool
     {
-        return auth()->user()->hasRole('admin');
+        return auth()->user()->hasRole('admin') || auth()->user()->hasRole('manager');
     }
 
     public static function getPages(): array
