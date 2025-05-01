@@ -30,10 +30,7 @@ class LeadsResource extends Resource
                     ->label('Status')
                     ->options(Status::pluck('name', 'id'))
                     ->visible(fn(): bool => Auth::user()?->hasRole('admin') ?? false),
-                Forms\Components\Select::make('insurance_id')
-                    ->relationship('insurance', 'name')
-                    ->required(),
-                Forms\Components\Select::make('product_id')
+                                Forms\Components\Select::make('product_id')
                     ->relationship('product', 'name')
                     ->required(),
                 Forms\Components\TextInput::make('patient_phone')
@@ -44,10 +41,6 @@ class LeadsResource extends Resource
                     ])
                     ->required()
                     ->maxLength(15),
-                Forms\Components\TextInput::make('secondary_phone')
-                    ->tel()
-                    ->maxLength(15)
-                    ->default(null),
                 Forms\Components\TextInput::make('first_name')
                     ->required()
                     ->maxLength(15),
@@ -75,24 +68,11 @@ class LeadsResource extends Resource
                 Forms\Components\TextInput::make('zip')
                     ->required()
                     ->maxLength(15),
-                Forms\Components\Textarea::make('product_specs')
-                    ->required()
-                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('doctor_name')
                     ->required()
                     ->maxLength(30),
-                Forms\Components\TextInput::make('patient_last_visit')
-                    ->required()
-                    ->maxLength(20),
                 Forms\Components\Textarea::make('doctor_address')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('doctor_phone')
-                    ->tel()
-                    ->required()
-                    ->maxLength(15),
-                Forms\Components\TextInput::make('doctor_fax')
-                    ->required()
-                    ->maxLength(20),
                 Forms\Components\TextInput::make('doctor_npi')
                     ->required()
                     ->maxLength(50),
@@ -171,19 +151,11 @@ class LeadsResource extends Resource
                     ->placeholder('Unassigned')
                     ->badge('success')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('insurance.name')
-                    ->numeric()
-                    ->copyable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('product.name')
                     ->numeric()
                     ->copyable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('patient_phone')
-                    ->copyable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('secondary_phone')
-                    ->placeholder('-')
                     ->copyable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('first_name')
@@ -215,15 +187,6 @@ class LeadsResource extends Resource
                     ->copyable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('doctor_address')
-                    ->copyable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('patient_last_visit')
-                    ->copyable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('doctor_phone')
-                    ->copyable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('doctor_fax')
                     ->copyable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('doctor_npi')
